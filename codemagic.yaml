@@ -1,0 +1,31 @@
+workflows:
+  android-workflow:
+    name: Chinese Novel Game Android Build
+    max_build_duration: 30
+    environment:
+      vars:
+        PACKAGE_NAME: "com.novelgame"
+      java: 11
+    cache:
+      cache_paths:
+        - ~/.gradle/caches
+    scripts:
+      - name: Set up local.properties
+        script: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/local.properties"
+      
+      - name: Build Android APK
+        script: |
+          chmod +x ./gradlew
+          ./gradlew assembleDebug
+    
+    artifacts:
+      - app/build/outputs/apk/debug/*.apk
+    
+    publishing:
+      email:
+        recipients:
+          - user@example.com
+        notify:
+          success: true
+          failure: true
